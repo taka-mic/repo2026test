@@ -17,12 +17,12 @@ const cityTypeBadgeColor: Record<string, string> = {
 
 export default function BuildingCard({ building }: Props) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-      <div className="flex items-center gap-2 mb-5">
-        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+    <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
           <Building2 className="w-4 h-4 text-indigo-600" />
         </div>
-        <h2 className="font-bold text-slate-800 text-lg">建物分析</h2>
+        <h2 className="font-bold text-slate-800 text-base">建物分析</h2>
         <span className={`ml-auto text-xs font-semibold px-2.5 py-1 rounded-full ${cityTypeBadgeColor[building.cityType] ?? "bg-slate-100 text-slate-700"}`}>
           {building.cityType}
         </span>
@@ -51,11 +51,11 @@ export default function BuildingCard({ building }: Props) {
       )}
 
       <div className="mt-4 pt-4 border-t border-slate-100">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-1.5">
           <span className="text-xs text-slate-500">分析信頼度</span>
           <span className="text-xs font-bold text-indigo-600">{building.locationConfidence}%</span>
         </div>
-        <div className="mt-1.5 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-full transition-all duration-700"
             style={{ width: `${building.locationConfidence}%` }}
@@ -68,12 +68,12 @@ export default function BuildingCard({ building }: Props) {
 
 function InfoItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-0.5">
+    <div className="flex flex-col gap-0.5 min-w-0">
       <span className="flex items-center gap-1 text-xs text-slate-400">
         {icon}
-        {label}
+        <span className="truncate">{label}</span>
       </span>
-      <span className="text-sm font-semibold text-slate-700">{value}</span>
+      <span className="text-sm font-semibold text-slate-700 truncate">{value}</span>
     </div>
   );
 }
