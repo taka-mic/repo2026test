@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, MapPin, Calendar, Layers, CheckCircle2 } from "lucide-react";
+import { Building2, MapPin, Calendar, Layers, CheckCircle2, Search } from "lucide-react";
 import type { BuildingAnalysis } from "@/types";
 
 interface Props {
@@ -27,6 +27,27 @@ export default function BuildingCard({ building }: Props) {
           {building.cityType}
         </span>
       </div>
+
+      {(building.buildingName !== "不明" || building.address !== "不明") && (
+        <div className="mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+          <div className="flex items-center gap-1.5 mb-2">
+            <Search className="w-3.5 h-3.5 text-indigo-500" />
+            <span className="text-xs font-semibold text-indigo-600">写真から特定</span>
+          </div>
+          {building.buildingName !== "不明" && (
+            <div className="mb-1.5">
+              <span className="text-xs text-indigo-400">建物名</span>
+              <p className="text-sm font-bold text-indigo-800">{building.buildingName}</p>
+            </div>
+          )}
+          {building.address !== "不明" && (
+            <div>
+              <span className="text-xs text-indigo-400">住所</span>
+              <p className="text-sm font-semibold text-indigo-700">{building.address}</p>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         <InfoItem icon={<Building2 className="w-3.5 h-3.5" />} label="建物種別" value={building.buildingType} />
