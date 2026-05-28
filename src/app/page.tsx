@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, ChevronRight, AlertCircle, ArrowLeft } from "lucide-react";
+import { Building2, ChevronRight, AlertCircle, ArrowLeft, MapPin } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import BuildingCard from "@/components/BuildingCard";
 import PopulationCard from "@/components/PopulationCard";
 import PricingDashboard from "@/components/PricingDashboard";
+import { extractGpsFromFile, type GpsCoords } from "@/lib/location";
 import type { AnalysisResponse } from "@/types";
 
 export default function Home() {
@@ -13,11 +14,15 @@ export default function Home() {
   const [analyzing, setAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [gpsCoords, setGpsCoords] = useState<GpsCoords | null | undefined>(undefined);
 
-  const handleImageSelect = (file: File) => {
+  const handleImageSelect = async (file: File) => {
     setSelectedFile(file);
     setResult(null);
     setError(null);
+    setGpsCoords(undefined);
+    const coords = await extractGpsFromFile(file);
+    setGpsCoords(coords);
   };
 
   const handleAnalyze = async () => {
@@ -28,6 +33,10 @@ export default function Home() {
     try {
       const formData = new FormData();
       formData.append("image", selectedFile);
+      if (gpsCoords) {
+        formData.append("latitude", String(gpsCoords.latitude));
+        formData.append("longitude", String(gpsCoords.longitude));
+      }
 
       const res = await fetch("/api/analyze", {
         method: "POST",
@@ -103,6 +112,21 @@ export default function Home() {
             {/* Upload */}
             <div className="space-y-4">
               <ImageUpload onImageSelect={handleImageSelect} disabled={analyzing} />
+
+              {selectedFile && (
+                <div className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold ${
+                  gpsCoords === undefined
+                    ? "bg-slate-50 text-slate-400"
+                    : gpsCoords
+                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                    : "bg-slate-50 text-slate-500"
+                }`}>
+                  <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                  {gpsCoords === undefined && "GPS情報を確認中..."}
+                  {gpsCoords && `GPS取得済み（${gpsCoords.latitude.toFixed(4)}, ${gpsCoords.longitude.toFixed(4)}）`}
+                  {gpsCoords === null && "GPS情報なし — 視覚情報から推定します"}
+                </div>
+              )}
 
               {error && (
                 <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4">

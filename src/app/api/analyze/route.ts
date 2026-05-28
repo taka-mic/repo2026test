@@ -7,6 +7,23 @@ import {
 } from "@/lib/pricing";
 import type { AnalysisResponse } from "@/types";
 
+async function reverseGeocode(lat: number, lon: number): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=ja`,
+      {
+        headers: { "User-Agent": "RentAI/1.0 (rental-price-estimator)" },
+        signal: AbortSignal.timeout(5000),
+      }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return (data.display_name as string) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -31,6 +48,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const latRaw = formData.get("latitude");
+    const lonRaw = formData.get("longitude");
+    let gpsAddress: string | null = null;
+    let locationContext: string | null = null;
+
+    if (latRaw && lonRaw) {
+      const lat = parseFloat(String(latRaw));
+      const lon = parseFloat(String(lonRaw));
+      if (!isNaN(lat) && !isNaN(lon)) {
+        gpsAddress = await reverseGeocode(lat, lon);
+        if (gpsAddress) {
+          locationContext = gpsAddress;
+        }
+      }
+    }
+
     const arrayBuffer = await file.arrayBuffer();
     const base64 = Buffer.from(arrayBuffer).toString("base64");
     const mediaType = file.type as
@@ -39,7 +72,11 @@ export async function POST(req: NextRequest) {
       | "image/webp"
       | "image/gif";
 
-    const building = await analyzeBuildingImage(base64, mediaType);
+    const building = await analyzeBuildingImage(base64, mediaType, locationContext);
+    if (gpsAddress) {
+      building.gpsAddress = gpsAddress;
+    }
+
     const population = calculatePopulationData(building);
     const pricing = calculatePricing(building, population);
     const roomTypes = generateRoomTypePricing(building, pricing);

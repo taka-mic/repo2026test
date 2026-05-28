@@ -5,13 +5,18 @@ const client = new Anthropic();
 
 export async function analyzeBuildingImage(
   base64Image: string,
-  mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif"
+  mediaType: "image/jpeg" | "image/png" | "image/webp" | "image/gif",
+  locationContext: string | null = null
 ): Promise<BuildingAnalysis> {
+  const locationHint = locationContext
+    ? `\n\n【GPS情報あり】この写真は以下の場所で撮影されました: ${locationContext}\nこの位置情報を参考に、prefecture・cityType・areaCharacteristicsを正確に入力してください。`
+    : "";
+
   const response = await client.messages.create({
     model: "claude-sonnet-4-6",
     max_tokens: 2000,
     system: `あなたは日本の不動産の専門家です。建物の写真を分析して、建物の特徴と立地情報をJSON形式で返してください。
-写真に建物名（マンション名・アパート名）や住所が写っている場合は正確に読み取ってください。看板・表札・エントランスの文字・郵便受けなどに注目してください。
+写真に建物名（マンション名・アパート名）や住所が写っている場合は正確に読み取ってください。看板・表札・エントランスの文字・郵便受けなどに注目してください。${locationHint}
 必ず以下のJSON形式のみで回答してください（説明文なし）:
 {
   "buildingName": "建物名（読み取れた場合は正確な名称、不明の場合は「不明」）",
