@@ -39,12 +39,14 @@
     background: rgba(255,255,255,0.3);
   }
 
+  /* 色テーマ */
   .box-user    { background: linear-gradient(135deg,#6366f1,#8b5cf6); color: #fff; }
   .box-vercel  { background: linear-gradient(135deg,#0f172a,#1e293b); color: #fff; }
   .box-github  { background: linear-gradient(135deg,#24292e,#444d56); color: #fff; }
   .box-claude  { background: linear-gradient(135deg,#d97706,#f59e0b); color: #fff; }
   .box-ai      { background: linear-gradient(135deg,#d97706,#b45309); color: #fff; }
 
+  /* Next.js 内部 */
   .inner { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .inner-box {
     background: rgba(255,255,255,0.12);
@@ -56,6 +58,7 @@
   }
   .inner-box span { display: block; font-size: 10px; font-weight: 400; opacity: 0.75; margin-top: 2px; }
 
+  /* 矢印 */
   .arrow {
     display: flex;
     flex-direction: column;
@@ -67,6 +70,10 @@
   .arrow-head { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid #cbd5e1; }
   .arrow-label { font-size: 10px; color: #94a3b8; font-weight: 600; margin: 2px 0; }
 
+  /* 横並びボックス */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+
+  /* コスト表 */
   .cost-table { width: 100%; border-collapse: collapse; margin-top: 24px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
   .cost-table th { background: #1e293b; color: white; font-size: 11px; padding: 8px 12px; text-align: left; }
   .cost-table td { font-size: 12px; padding: 8px 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
@@ -84,6 +91,7 @@
 
 <div class="diagram">
 
+  <!-- ユーザー -->
   <div class="box box-user" style="width:100%">
     <div class="box-label">利用者</div>
     <div class="box-title">📱 スマホ / PC</div>
@@ -97,6 +105,7 @@
     <div class="arrow-head"></div>
   </div>
 
+  <!-- Vercel -->
   <div class="box box-vercel">
     <div class="box-label">実行環境</div>
     <div class="box-title">▲ Vercel（無料）</div>
@@ -113,6 +122,7 @@
     <div class="arrow-head"></div>
   </div>
 
+  <!-- Anthropic -->
   <div class="box box-ai">
     <div class="box-label">AI処理</div>
     <div class="box-title">✦ Anthropic API</div>
@@ -122,6 +132,7 @@
 
 </div>
 
+<!-- 開発フロー -->
 <p class="section-title" style="max-width:480px;margin-left:auto;margin-right:auto">開発・デプロイフロー</p>
 <div style="max-width:480px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:0">
 
@@ -157,6 +168,7 @@
 
 </div>
 
+<!-- コスト表 -->
 <div style="max-width:480px;margin:0 auto;">
 <p class="section-title">コスト</p>
 <table class="cost-table">

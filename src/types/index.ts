@@ -1,4 +1,6 @@
 export interface BuildingAnalysis {
+  buildingName: string;
+  address: string;
   buildingType: string;
   estimatedAge: string;
   condition: string;
