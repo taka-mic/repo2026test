@@ -28,6 +28,16 @@ export default function BuildingCard({ building }: Props) {
         </span>
       </div>
 
+      {building.gpsAddress && (
+        <div className="mb-4 p-3 bg-emerald-50 rounded-xl border border-emerald-200">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="text-xs font-semibold text-emerald-700">GPS位置情報</span>
+          </div>
+          <p className="text-xs text-emerald-800 leading-relaxed">{building.gpsAddress}</p>
+        </div>
+      )}
+
       {(building.buildingName !== "不明" || building.address !== "不明") && (
         <div className="mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
           <div className="flex items-center gap-1.5 mb-2">
